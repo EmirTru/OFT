@@ -423,10 +423,13 @@
           } else {
               let mediaSection = '';
               if (!isVerici && stream) {
+                  // If we are the receiver and the camera stream is active, show the camera preview
                   mediaSection = `<div class="w-full h-full"><video id="camera-video-display" class="w-full h-full object-cover rounded-xl" autoplay playsinline></video></div>`;
               } else if (isVerici && mediaGallery.length === 0) {
+                  // If we are the sender and no media has been received yet
                   mediaSection = `<div class="text-gray-400 p-4 text-center">Alıcı cihazdan medya bekleniyor...</div>`;
               } else if (isVerici && mediaGallery.length > 0) {
+                  // If we are the sender and media has been received, show the gallery
                   mediaSection = `<div id="media-gallery" class="w-full h-full p-2 grid grid-cols-2 gap-2 overflow-y-auto">
                       ${mediaGallery.map(media => `
                           <div class="relative rounded-lg overflow-hidden border border-gray-600">
@@ -438,6 +441,7 @@
 
               let controlSection = '';
               if (!isVerici) {
+                  // This is the UI for the receiver (camera)
                   controlSection = `
                       <div class="w-full md:w-1/2 flex flex-col space-y-4">
                           <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
@@ -456,6 +460,7 @@
                       </div>
                   `;
               } else {
+                  // This is the UI for the sender (display) with chat
                   controlSection = `
                       <div class="w-full md:w-1/2 flex flex-col space-y-4">
                           <div class="flex-1 flex flex-col space-y-4">
@@ -504,6 +509,7 @@
         document.getElementById('reset-btn')?.addEventListener('click', resetApp);
         
         if (!connectionCode) {
+            // Sadece bağlantı kodu yoksa bu butonlar aktif olur
             document.getElementById('create-connection-btn')?.addEventListener('click', createConnection);
             const mediaCodeInput = document.getElementById('media-code-input');
             const joinButton = document.getElementById('join-connection-btn');
@@ -514,7 +520,7 @@
             });
             joinButton?.addEventListener('click', joinConnection);
         } else {
-            // Camera or chat buttons
+            // Bağlantı kurulduysa kamera veya sohbet butonları
             if (!isVerici) {
                 document.getElementById('take-photo-btn')?.addEventListener('click', takePhoto);
                 const recordVideoBtn = document.getElementById('record-video-btn');
