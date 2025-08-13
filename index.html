@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Camera App</title>
+  <title>Kamera Uygulaması</title>
   <!-- Google Fonts for Inter font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- Tailwind CSS CDN -->
@@ -29,7 +29,7 @@
   <canvas id="camera-canvas" style="display: none;"></canvas>
 
   <script type="module">
-    // Import Firebase modules
+    // Firebase modüllerini import et
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getFirestore, doc, setDoc, onSnapshot, collection, query, addDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -41,7 +41,7 @@
     const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
     const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
     
-    // Uygulama kimliğini Firebase yapılandırmasından alıyoruz, Firestore yolları için kullanılacak
+    // Uygulama kimliğini Firebase yapılandırmasından alıyoruz
     const appId = firebaseConfig.projectId;
 
     // Firebase services
@@ -70,27 +70,30 @@
     let mediaRecorder = null;
     let chunks = [];
 
-    // Helper function: Concatenates Tailwind classes
+    // Helper function: Tailwind sınıflarını birleştirir
     const cn = (...classes) => classes.filter(Boolean).join(' ');
 
-    // Function to show modal
+    // Fonksiyon: Modal gösterir
     const showModal = (message, type) => {
         modalMessage = message;
         modalType = type;
         renderUI();
     };
 
-    // Function to close modal
+    // Fonksiyon: Modalı kapatır
     const closeModal = () => {
         modalMessage = null;
         renderUI();
     };
 
-    // Sets up Firestore listeners
+    // Firestore dinleyicilerini ayarlar
     const setupFirestoreListeners = () => {
-        if (!isFirebaseReady || !connectionCode || !userId) return;
+        if (!isFirebaseReady || !connectionCode || !userId) {
+          console.warn("Firestore dinleyicileri başlatılamadı: Firebase hazır değil veya bağlantı kodu/kullanıcı kimliği eksik.");
+          return;
+        }
 
-        // Listen to Media Gallery
+        // Medya Galerisini Dinle
         const mediaCollectionRef = collection(db, `/artifacts/${appId}/public/data/connections/${connectionCode}/media`);
         const unsubscribeMedia = onSnapshot(mediaCollectionRef, (querySnapshot) => {
             const mediaList = [];
@@ -101,12 +104,13 @@
             mediaGallery = mediaList;
             renderUI();
         }, (error) => {
-            console.error("Firestore media read error:", error);
+            console.error("Firestore medya okuma hatası:", error);
             connectionStatus = 'Medya bağlantı hatası.';
+            showModal(`Medya akışını alırken hata oluştu: ${error.message}`, 'error');
             renderUI();
         });
 
-        // Listen to Chat Messages
+        // Sohbet Mesajlarını Dinle
         const chatCollectionRef = collection(db, `/artifacts/${appId}/public/data/connections/${connectionCode}/chat`);
         const unsubscribeChat = onSnapshot(chatCollectionRef, (querySnapshot) => {
             const chatList = [];
@@ -121,7 +125,8 @@
                 chatEndRef.scrollIntoView({ behavior: 'smooth' });
             }
         }, (error) => {
-            console.error("Firestore chat read error:", error);
+            console.error("Firestore sohbet okuma hatası:", error);
+            showModal(`Sohbet mesajlarını alırken hata oluştu: ${error.message}`, 'error');
         });
 
         return { unsubscribeMedia, unsubscribeChat };
@@ -129,7 +134,7 @@
 
     let unsubscribeFunctions = { unsubscribeMedia: null, unsubscribeChat: null };
 
-    // Creates a new connection code
+    // Yeni bir bağlantı kodu oluşturur
     const createConnection = async () => {
         if (!isFirebaseReady || !userId) {
             showModal("Firebase yükleniyor, lütfen bekleyin.", 'error');
@@ -155,7 +160,7 @@
             connectionStatus = `Gönderici kodu: ${newCode}. Alıcı bekleniyor...`;
             unsubscribeFunctions = setupFirestoreListeners();
         } catch (e) {
-            console.error("Firestore connection creation error:", e);
+            console.error("Firestore bağlantı oluşturma hatası:", e);
             showModal(`Bağlantı oluşturulamadı: ${e.message || 'Bilinmeyen bir hata oluştu.'}`, 'error');
         } finally {
             isConnecting = false;
@@ -163,7 +168,7 @@
         }
     };
 
-    // Joins a connection
+    // Bir bağlantıya katılır
     const joinConnection = async () => {
         if (!isFirebaseReady || !userId) {
             showModal("Firebase yükleniyor, lütfen bekleyin.", 'error');
@@ -191,7 +196,7 @@
                 showModal('Bağlantı bulunamadı. Lütfen kodu kontrol edin.', 'error');
             }
         } catch (e) {
-            console.error("Firestore connection error:", e);
+            console.error("Firestore bağlantı hatası:", e);
             connectionStatus = 'Bağlantı hatası.';
             showModal(`Bağlantı hatası: ${e.message || 'Bilinmeyen bir hata oluştu.'}`, 'error');
         } finally {
@@ -200,7 +205,7 @@
         }
     };
 
-    // Starts camera access
+    // Kamera erişimini başlatır
     const startCamera = async () => {
         try {
             const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -209,13 +214,13 @@
             videoRef.play();
             connectionStatus = 'Kamera hazır. Fotoğraf veya video çekebilirsiniz.';
         } catch (err) {
-            console.error("Camera access failed:", err);
+            console.error("Kamera erişimi başarısız oldu:", err);
             connectionStatus = "Kamera erişimi başarısız oldu. Lütfen izinleri kontrol edin.";
             showModal("Kamera erişimi reddedildi. Lütfen tarayıcı ayarlarınızdan izinleri verin.", 'error');
         }
     };
 
-    // Takes a photo and sends it to Firestore
+    // Fotoğraf çeker ve Firestore'a gönderir
     const takePhoto = async () => {
         if (!videoRef || !canvasRef || !connectionCode) return;
         isSending = true;
@@ -236,7 +241,7 @@
             });
             showModal("Fotoğraf başarıyla gönderildi!", 'success');
         } catch (e) {
-            console.error("Firestore photo send error:", e);
+            console.error("Firestore fotoğraf gönderme hatası:", e);
             showModal("Fotoğraf gönderilirken bir hata oluştu.", 'error');
         } finally {
             isSending = false;
@@ -244,7 +249,7 @@
         }
     };
 
-    // Starts video recording
+    // Video kaydını başlatır
     const startRecording = () => {
         if (!stream || !connectionCode) return;
         chunks = [];
@@ -273,7 +278,7 @@
                     });
                     showModal("Video başarıyla gönderildi!", 'success');
                 } catch (e) {
-                    console.error("Firestore video send error:", e);
+                    console.error("Firestore video gönderme hatası:", e);
                     showModal("Video gönderilirken bir hata oluştu.", 'error');
                 } finally {
                     isSending = false;
@@ -287,7 +292,7 @@
         renderUI();
     };
 
-    // Stops video recording
+    // Video kaydını durdurur
     const stopRecording = () => {
         if (mediaRecorder && isRecording) {
             mediaRecorder.stop();
@@ -296,7 +301,7 @@
         }
     };
 
-    // Sends a chat message
+    // Sohbet mesajı gönderir
     const sendChatMessage = async () => {
         const chatInput = document.getElementById('chat-input');
         if (chatInput && chatInput.value.trim() === '' || !connectionCode) return;
@@ -310,12 +315,12 @@
             });
             chatInput.value = '';
         } catch (e) {
-            console.error("Chat message send error:", e);
+            console.error("Sohbet mesajı gönderme hatası:", e);
             showModal("Mesaj gönderilirken bir hata oluştu.", 'error');
         }
     };
 
-    // Resets the application
+    // Uygulamayı sıfırlar
     const resetApp = () => {
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
@@ -336,7 +341,7 @@
         renderUI();
     };
 
-    // Main function to create and update the UI
+    // Arayüzü oluşturur ve günceller
     const renderUI = () => {
         appRoot.innerHTML = '';
         
@@ -362,7 +367,7 @@
             document.getElementById('modal-close-btn').addEventListener('click', closeModal);
         }
 
-        // Main app content
+        // Ana uygulama içeriği
         let mainContentHTML = ``;
 
         if (!isFirebaseReady) {
@@ -374,7 +379,7 @@
           `;
         } else {
           mainContentHTML += `
-            <!-- Title and reset button -->
+            <!-- Başlık ve sıfırlama butonu -->
             <header class="flex justify-between items-center pb-4 border-b border-gray-700">
                 <h1 class="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
                     Kamera Uygulaması 📸
@@ -385,7 +390,7 @@
                 </button>
             </header>
 
-            <!-- Connection Status -->
+            <!-- Bağlantı Durumu -->
             <div class="flex items-center justify-center p-3 rounded-lg bg-gray-700 text-sm font-medium">
                 ${isConnecting || isSending ? '<span class="animate-pulse">İşleniyor...</span>' : `<span>${connectionStatus}</span>`}
             </div>
@@ -393,7 +398,7 @@
           
           if (!connectionCode) {
               mainContentHTML += `
-                  <!-- Connection Interface -->
+                  <!-- Bağlantı Arayüzü -->
                   <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6 p-8">
                       <div class="flex-1 flex flex-col items-center justify-center p-6 bg-gray-700 rounded-lg shadow-inner space-y-4">
                           <h2 class="text-xl md:text-2xl font-semibold text-center">Gönderici (Ekran)</h2>
@@ -423,13 +428,13 @@
           } else {
               let mediaSection = '';
               if (!isVerici && stream) {
-                  // If we are the receiver and the camera stream is active, show the camera preview
+                  // Alıcıysak ve kamera akışı aktifse, kamera önizlemesini göster
                   mediaSection = `<div class="w-full h-full"><video id="camera-video-display" class="w-full h-full object-cover rounded-xl" autoplay playsinline></video></div>`;
               } else if (isVerici && mediaGallery.length === 0) {
-                  // If we are the sender and no media has been received yet
+                  // Göndericiysek ve henüz medya alınmadıysa
                   mediaSection = `<div class="text-gray-400 p-4 text-center">Alıcı cihazdan medya bekleniyor...</div>`;
               } else if (isVerici && mediaGallery.length > 0) {
-                  // If we are the sender and media has been received, show the gallery
+                  // Göndericiysek ve medya alındıysa, galeriyi göster
                   mediaSection = `<div id="media-gallery" class="w-full h-full p-2 grid grid-cols-2 gap-2 overflow-y-auto">
                       ${mediaGallery.map(media => `
                           <div class="relative rounded-lg overflow-hidden border border-gray-600">
@@ -441,7 +446,7 @@
 
               let controlSection = '';
               if (!isVerici) {
-                  // This is the UI for the receiver (camera)
+                  // Bu, alıcı (kamera) için arayüz
                   controlSection = `
                       <div class="w-full md:w-1/2 flex flex-col space-y-4">
                           <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
@@ -460,7 +465,7 @@
                       </div>
                   `;
               } else {
-                  // This is the UI for the sender (display) with chat
+                  // Bu, gönderici (ekran) ve sohbet için arayüz
                   controlSection = `
                       <div class="w-full md:w-1/2 flex flex-col space-y-4">
                           <div class="flex-1 flex flex-col space-y-4">
@@ -505,11 +510,10 @@
 
         appRoot.innerHTML = mainContentHTML;
         
-        // Add event listeners
+        // Olay dinleyicilerini ekle
         document.getElementById('reset-btn')?.addEventListener('click', resetApp);
         
         if (!connectionCode) {
-            // Sadece bağlantı kodu yoksa bu butonlar aktif olur
             document.getElementById('create-connection-btn')?.addEventListener('click', createConnection);
             const mediaCodeInput = document.getElementById('media-code-input');
             const joinButton = document.getElementById('join-connection-btn');
@@ -520,7 +524,6 @@
             });
             joinButton?.addEventListener('click', joinConnection);
         } else {
-            // Bağlantı kurulduysa kamera veya sohbet butonları
             if (!isVerici) {
                 document.getElementById('take-photo-btn')?.addEventListener('click', takePhoto);
                 const recordVideoBtn = document.getElementById('record-video-btn');
@@ -541,7 +544,6 @@
             }
         }
 
-        // Add video and canvas to the DOM (hidden)
         if (!document.body.contains(videoRef)) {
           videoRef.style.display = 'none';
           document.body.appendChild(videoRef);
@@ -551,7 +553,6 @@
           document.body.appendChild(canvasRef);
         }
 
-        // Assign video element for camera stream
         if (!isVerici && connectionCode) {
             const videoDisplay = document.getElementById('camera-video-display');
             if (videoDisplay) {
@@ -561,20 +562,23 @@
         }
     };
     
-    // Firebase initialization function
+    // Firebase başlangıç fonksiyonu
     const initFirebase = async () => {
         try {
+            console.log("Firebase başlatılıyor...");
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
             
-            // Set up listener after Firebase services are successfully initialized
+            console.log("onAuthStateChanged dinleyicisi ayarlanıyor...");
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     userId = user.uid;
                     isFirebaseReady = true;
+                    console.log(`Firebase hazır. Kullanıcı kimliği: ${userId}`);
                     renderUI();
                 } else {
+                    console.log("Kullanıcı oturumu açılmamış. Anonim olarak oturum açmayı deniyorum...");
                     try {
                         if (initialAuthToken) {
                             await signInWithCustomToken(auth, initialAuthToken);
@@ -582,10 +586,12 @@
                             await signInAnonymously(auth);
                         }
                     } catch (e) {
-                        console.error("Firebase Auth error:", e);
+                        console.error("Firebase Kimlik Doğrulama hatası:", e);
                         let errorMessage = `Firebase'a bağlanırken bir hata oluştu: ${e.message}`;
                         if (e.code === 'auth/configuration-not-found') {
-                             errorMessage = 'Hata: Firebase projenizde "Anonymous" (Anonim) oturum açma yöntemi etkinleştirilmemiş. Lütfen Firebase konsolundan bu ayarı yapın.';
+                             errorMessage = 'Hata: Firebase projenizde "Anonymous" (Anonim) oturum açma yöntemi etkinleştirilmemiş.';
+                        } else if (e.code === 'auth/network-request-failed') {
+                             errorMessage = 'Hata: İnternet bağlantınızda sorun olabilir. Lütfen kontrol edin.';
                         }
                         showModal(errorMessage, 'error');
                         isFirebaseReady = false;
@@ -595,14 +601,14 @@
             });
 
         } catch (e) {
-            console.error("Firebase initialization error:", e);
-            showModal("Uygulama başlatılırken bir hata oluştu: Firebase yapılandırması yanlış olabilir.", 'error');
+            console.error("Firebase başlatma hatası:", e);
+            showModal(`Uygulama başlatılırken bir hata oluştu: Firebase yapılandırması yanlış olabilir. Hata: ${e.message}`, 'error');
             isFirebaseReady = false;
             renderUI();
         }
     };
 
-    // Start the application
+    // Uygulamayı başlat
     initFirebase();
   </script>
 </body>
