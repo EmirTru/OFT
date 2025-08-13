@@ -1,50 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kamera Uygulaması</title>
-  <!-- Google Fonts for Inter font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamera Uygulaması</title>
+    <!-- Sadece temel, inline CSS kullanıldı -->
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #2c2c2c;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #3e3e3e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #555;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .status-bar {
+            text-align: center;
+            padding: 10px;
+            background-color: #555;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .connection-options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .connection-card {
+            background-color: #4a4a4a;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .connection-card h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+        .connection-card p {
+            font-size: 14px;
+            color: #bbb;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .input-group input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #666;
+            background-color: #3e3e3e;
+            color: #ffffff;
+        }
+        .btn {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-green {
+            background-color: #22c55e;
+            color: #fff;
+        }
+        .btn-green:hover {
+            background-color: #16a34a;
+        }
+        .btn-blue {
+            background-color: #3b82f6;
+            color: #fff;
+        }
+        .btn-blue:hover {
+            background-color: #2563eb;
+        }
+        .btn-purple {
+            background-color: #8b5cf6;
+            color: #fff;
+        }
+        .btn-purple:hover {
+            background-color: #7c3aed;
+        }
+        .btn-red {
+            background-color: #ef4444;
+            color: #fff;
+        }
+        .btn-red:hover {
+            background-color: #dc2626;
+        }
+        .btn-reset {
+            background-color: transparent;
+            color: #bbb;
+        }
+        .btn-reset:hover {
+            color: #fff;
+        }
+        .btn:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+        }
+        .media-and-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .media-display {
+            width: 100%;
+            background-color: #1f1f1f;
+            min-height: 200px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .media-display video, .media-display img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .media-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .media-item {
+            border: 1px solid #555;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .chat-section {
+            background-color: #4a4a4a;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chat-messages {
+            max-height: 300px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 10px;
+            background-color: #3e3e3e;
+            border-radius: 5px;
+        }
+        .chat-message {
+            padding: 8px;
+            border-radius: 8px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .chat-message.sent {
+            background-color: #3b82f6;
+            align-self: flex-end;
+        }
+        .chat-message.received {
+            background-color: #666;
+            align-self: flex-start;
+        }
+        .chat-input-group {
+            display: flex;
+            gap: 5px;
+        }
+        .chat-input-group input {
+            flex-grow: 1;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: #3e3e3e;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        @media (min-width: 768px) {
+            .connection-options {
+                flex-direction: row;
+            }
+            .media-and-controls {
+                flex-direction: row;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-white p-4 md:p-8 flex items-center justify-center min-h-screen">
+<body>
 
-  <div id="app-root" class="w-full max-w-4xl bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 flex flex-col space-y-6">
-    <!-- UI content will be loaded here via JavaScript -->
-    <div id="loading-spinner" class="flex flex-col items-center justify-center h-64">
-      <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
-      <p class="mt-4 text-gray-400">Yükleniyor...</p>
+  <div id="app-root" class="container">
+    <div style="text-align: center;">
+      <p>Yükleniyor...</p>
     </div>
   </div>
   
-  <!-- Video and Canvas elements added to the DOM, but not visible -->
   <video id="camera-video" style="display: none;" autoplay playsinline></video>
   <canvas id="camera-canvas" style="display: none;"></canvas>
 
   <script type="module">
     // Firebase modüllerini import et
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, onSnapshot, collection, query, addDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-    // ######################################################################################
-    // ##################### YAPILANDIRMA BİLGİLERİ (Canvas ortamından otomatik alınacak) #####################
-    // ######################################################################################
-    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+    // Canvas ortamından otomatik olarak alınan Firebase yapılandırma bilgileri
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
     const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-    // Firebase services
+    // Firebase servisleri
     let app, db, auth;
 
-    // State variables
+    // Uygulamanın durumunu tutan değişkenler
     let stream = null;
     let mediaGallery = [];
     let chatMessages = [];
@@ -60,15 +262,12 @@
     let modalType = 'success';
     let isFirebaseReady = false;
 
-    // DOM elements
+    // DOM elemanları
     const appRoot = document.getElementById('app-root');
     const videoRef = document.getElementById('camera-video');
     const canvasRef = document.getElementById('camera-canvas');
     let mediaRecorder = null;
     let chunks = [];
-
-    // Helper function: Tailwind sınıflarını birleştirir
-    const cn = (...classes) => classes.filter(Boolean).join(' ');
 
     // Fonksiyon: Modal gösterir
     const showModal = (message, type) => {
@@ -344,19 +543,12 @@
         
         // Modal
         if (modalMessage) {
-            const icon = modalType === 'success' ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><path d="M22 11.08V12a10 10 0 1 1-5.93-8.62"/><path d="m9 11 3 3L22 4"/></svg>` : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>`;
-            const title = modalType === 'success' ? 'Başarılı' : 'Hata';
-            const bgColor = modalType === 'success' ? 'bg-green-900' : 'bg-red-900';
-            
             const modalHTML = `
-                <div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
-                  <div class="${cn("rounded-xl p-6 shadow-2xl flex flex-col items-center space-y-4", bgColor)}">
-                    ${icon}
-                    <h3 class="text-xl font-bold text-white">${title}</h3>
-                    <p class="text-center text-gray-200">${modalMessage}</p>
-                    <button id="modal-close-btn" class="w-full p-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all font-semibold">
-                      Tamam
-                    </button>
+                <div class="modal">
+                  <div class="modal-content">
+                    <h3>${modalType === 'success' ? 'Başarılı' : 'Hata'}</h3>
+                    <p>${modalMessage}</p>
+                    <button id="modal-close-btn" class="btn ${modalType === 'success' ? 'btn-green' : 'btn-red'}">Tamam</button>
                   </div>
                 </div>
             `;
@@ -364,58 +556,42 @@
             document.getElementById('modal-close-btn').addEventListener('click', closeModal);
         }
 
-        // Ana uygulama içeriği
         let mainContentHTML = ``;
 
         if (!isFirebaseReady) {
           mainContentHTML = `
-            <div class="flex flex-col items-center justify-center h-64">
-              <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
-              <p class="mt-4 text-gray-400">Yükleniyor...</p>
+            <div style="text-align: center;">
+              <p>Yükleniyor...</p>
             </div>
           `;
         } else {
           mainContentHTML += `
-            <!-- Başlık ve sıfırlama butonu -->
-            <header class="flex justify-between items-center pb-4 border-b border-gray-700">
-                <h1 class="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
-                    Kamera Uygulaması 📸
-                </h1>
-                <button id="reset-btn" class="flex items-center text-gray-400 hover:text-white transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M3 12a9 9 0 0 1 9-9c2.97 0 5.71 1.18 7.72 3.19M21 12a9 9 0 0 1-9 9c-2.97 0-5.71-1.18-7.72-3.19M3 4V2h2M21 22v-2h-2"/><path d="M12 2a10 10 0 0 0-10 10"/><path d="M22 12a10 10 0 0 1-10 10"/></svg>
-                    Sıfırla
-                </button>
+            <header class="header">
+                <h1>Kamera Uygulaması 📸</h1>
+                <button id="reset-btn" class="btn btn-reset">Sıfırla</button>
             </header>
 
-            <!-- Bağlantı Durumu -->
-            <div class="flex items-center justify-center p-3 rounded-lg bg-gray-700 text-sm font-medium">
-                ${isConnecting || isSending ? '<span class="animate-pulse">İşleniyor...</span>' : `<span>${connectionStatus}</span>`}
+            <div class="status-bar">
+                <span>${isConnecting || isSending ? 'İşleniyor...' : connectionStatus}</span>
             </div>
           `;
           
           if (!connectionCode) {
               mainContentHTML += `
-                  <!-- Bağlantı Arayüzü -->
-                  <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6 p-8">
-                      <div class="flex-1 flex flex-col items-center justify-center p-6 bg-gray-700 rounded-lg shadow-inner space-y-4">
-                          <h2 class="text-xl md:text-2xl font-semibold text-center">Gönderici (Ekran)</h2>
-                          <p class="text-center text-gray-400">
-                              Başka bir cihazdan fotoğraf/video almak için bir bağlantı kodu oluşturun.
-                          </p>
-                          <button id="create-connection-btn" class="w-full flex items-center justify-center p-3 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold transition-all shadow-md disabled:bg-gray-500" ${isConnecting ? 'disabled' : ''}>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  <div class="connection-options">
+                      <div class="connection-card">
+                          <h2>Gönderici (Ekran)</h2>
+                          <p>Başka bir cihazdan fotoğraf/video almak için bir bağlantı kodu oluşturun.</p>
+                          <button id="create-connection-btn" class="btn btn-green" ${isConnecting ? 'disabled' : ''}>
                               Bağlantı Oluştur
                           </button>
                       </div>
-                      <div class="flex-1 flex flex-col items-center justify-center p-6 bg-gray-700 rounded-lg shadow-inner space-y-4">
-                          <h2 class="text-xl md:text-2xl font-semibold text-center">Alıcı (Kamera)</h2>
-                          <p class="text-center text-gray-400">
-                              Gönderici cihazdan gelen kodu girerek bağlanın ve medya gönderin.
-                          </p>
-                          <div class="flex flex-col w-full space-y-2">
-                              <input id="media-code-input" type="text" value="${mediaCode}" placeholder="Kodu girin..." class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                              <button id="join-connection-btn" class="w-full flex items-center justify-center p-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all shadow-md disabled:bg-gray-500" ${isConnecting || mediaCode.length !== 6 ? 'disabled' : ''}>
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+                      <div class="connection-card">
+                          <h2>Alıcı (Kamera)</h2>
+                          <p>Gönderici cihazdan gelen kodu girerek bağlanın.</p>
+                          <div class="input-group">
+                              <input id="media-code-input" type="text" value="${mediaCode}" placeholder="Kodu girin..." maxlength="6">
+                              <button id="join-connection-btn" class="btn btn-blue" ${isConnecting || mediaCode.length !== 6 ? 'disabled' : ''}>
                                   Bağlan
                               </button>
                           </div>
@@ -425,17 +601,14 @@
           } else {
               let mediaSection = '';
               if (!isVerici && stream) {
-                  // Alıcıysak ve kamera akışı aktifse, kamera önizlemesini göster
-                  mediaSection = `<div class="w-full h-full"><video id="camera-video-display" class="w-full h-full object-cover rounded-xl" autoplay playsinline></video></div>`;
+                  mediaSection = `<video id="camera-video-display" style="width:100%; height:auto;" autoplay playsinline></video>`;
               } else if (isVerici && mediaGallery.length === 0) {
-                  // Göndericiysek ve henüz medya alınmadıysa
-                  mediaSection = `<div class="text-gray-400 p-4 text-center">Alıcı cihazdan medya bekleniyor...</div>`;
+                  mediaSection = `<p style="color:#bbb; text-align:center;">Alıcı cihazdan medya bekleniyor...</p>`;
               } else if (isVerici && mediaGallery.length > 0) {
-                  // Göndericiysek ve medya alındıysa, galeriyi göster
-                  mediaSection = `<div id="media-gallery" class="w-full h-full p-2 grid grid-cols-2 gap-2 overflow-y-auto">
+                  mediaSection = `<div class="media-gallery">
                       ${mediaGallery.map(media => `
-                          <div class="relative rounded-lg overflow-hidden border border-gray-600">
-                              ${media.type === 'photo' ? `<img src="${media.data}" alt="Alınan Fotoğraf" class="w-full h-auto object-cover" />` : `<video src="${media.data}" controls class="w-full h-auto object-cover"></video>`}
+                          <div class="media-item">
+                              ${media.type === 'photo' ? `<img src="${media.data}" alt="Alınan Fotoğraf" style="width:100%; height:auto;" />` : `<video src="${media.data}" controls style="width:100%; height:auto;"></video>`}
                           </div>
                       `).join('')}
                   </div>`;
@@ -443,60 +616,47 @@
 
               let controlSection = '';
               if (!isVerici) {
-                  // Bu, alıcı (kamera) için arayüz
                   controlSection = `
-                      <div class="w-full md:w-1/2 flex flex-col space-y-4">
-                          <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-                              <button id="take-photo-btn" class="flex-1 flex items-center justify-center p-4 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold transition-all shadow-md disabled:bg-gray-500" ${isSending ? 'disabled' : ''}>
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                      <div style="display:flex; flex-direction:column; gap:10px;">
+                          <div style="display:flex; gap:10px;">
+                              <button id="take-photo-btn" class="btn btn-purple" style="flex-grow:1;" ${isSending ? 'disabled' : ''}>
                                   ${isSending ? 'Gönderiliyor...' : 'Fotoğraf Çek'}
                               </button>
-                              <button id="record-video-btn" class="${cn('flex-1 flex items-center justify-center p-4 rounded-lg text-white font-semibold transition-all shadow-md disabled:bg-gray-500', isRecording ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700')}" ${isSending ? 'disabled' : ''}>
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+                              <button id="record-video-btn" class="btn ${isRecording ? 'btn-red' : 'btn-green'}" style="flex-grow:1;" ${isSending ? 'disabled' : ''}>
                                   ${isRecording ? 'Kaydı Durdur' : 'Video Kaydet'}
                               </button>
                           </div>
-                          <div class="flex-1 mt-6 p-4 rounded-xl bg-gray-700 shadow-inner overflow-hidden flex items-center justify-center text-gray-400">
+                          <p style="text-align:center; color:#bbb;">
                               Kamera modundasınız. Çektiğiniz medya diğer cihaza gönderilecektir.
-                          </div>
+                          </p>
                       </div>
                   `;
               } else {
-                  // Bu, gönderici (ekran) ve sohbet için arayüz
                   controlSection = `
-                      <div class="w-full md:w-1/2 flex flex-col space-y-4">
-                          <div class="flex-1 flex flex-col space-y-4">
-                              <div class="p-4 rounded-xl bg-gray-700 shadow-inner overflow-hidden flex flex-col h-full">
-                                  <h3 class="text-lg font-bold mb-2 flex items-center">
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-blue-400"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                      Sohbet
-                                  </h3>
-                                  <div id="chat-messages-container" class="flex-1 overflow-y-auto p-2 bg-gray-800 rounded-lg mb-2 flex flex-col space-y-2">
-                                      ${chatMessages.map(msg => `
-                                          <div class="${cn('p-2 rounded-lg max-w-[80%]', msg.senderId === userId ? 'bg-blue-600 self-end text-right' : 'bg-gray-600 self-start text-left')}">
-                                              <p class="text-sm">${msg.message}</p>
-                                              <span class="text-xs text-gray-300 mt-1 block">
-                                                  ${new Date(msg.timestamp).toLocaleTimeString()}
-                                              </span>
-                                          </div>
-                                      `).join('')}
-                                      <div id="chat-end"></div>
+                      <div class="chat-section">
+                          <h3>Sohbet</h3>
+                          <div id="chat-messages-container" class="chat-messages">
+                              ${chatMessages.map(msg => `
+                                  <div class="chat-message ${msg.senderId === userId ? 'sent' : 'received'}">
+                                      <p>${msg.message}</p>
+                                      <span style="font-size:10px; color:#bbb;">
+                                          ${new Date(msg.timestamp).toLocaleTimeString()}
+                                      </span>
                                   </div>
-                                  <div class="flex space-x-2">
-                                      <input id="chat-input" type="text" placeholder="Bir mesaj yazın..." class="flex-1 p-2 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                      <button id="send-chat-btn" class="p-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-md">
-                                          Gönder
-                                      </button>
-                                  </div>
-                              </div>
+                              `).join('')}
+                              <div id="chat-end"></div>
+                          </div>
+                          <div class="chat-input-group">
+                              <input id="chat-input" type="text" placeholder="Bir mesaj yazın...">
+                              <button id="send-chat-btn" class="btn btn-blue">Gönder</button>
                           </div>
                       </div>
                   `;
               }
 
               mainContentHTML += `
-                  <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
-                      <div class="relative w-full md:w-1/2 rounded-xl overflow-hidden shadow-xl border-2 border-gray-700 bg-gray-900 flex items-center justify-center">
+                  <div class="media-and-controls">
+                      <div class="media-display">
                           ${mediaSection}
                       </div>
                       ${controlSection}
@@ -541,6 +701,7 @@
             }
         }
 
+        // video ve canvas elementlerini body'ye ekle
         if (!document.body.contains(videoRef)) {
           videoRef.style.display = 'none';
           document.body.appendChild(videoRef);
@@ -564,10 +725,8 @@
       try {
         console.log("Firebase başlatılıyor...");
         
-        // Firebase yapılandırma bilgilerini kontrol et
-        if (!firebaseConfig) {
-          showModal("Firebase yapılandırma bilgileri eksik. Lütfen Canvas uygulamasının doğru şekilde yüklendiğinden emin olun.", 'error');
-          return;
+        if (Object.keys(firebaseConfig).length === 0) {
+            throw new Error("Firebase yapılandırma bilgileri eksik. Lütfen 'firebaseConfig' objesinin doğru yüklendiğinden emin olun.");
         }
 
         app = initializeApp(firebaseConfig);
