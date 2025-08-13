@@ -35,23 +35,17 @@
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
     // ######################################################################################
-    // ################################### ÖNEMLİ BİLGİLENDİRME ###################################
+    // ############################# YAPILANDIRMA BİLGİLERİ #################################
     // ######################################################################################
-    // Bu uygulamanın çalışması için kendi Firebase projenizin yapılandırma bilgilerini
-    // aşağıdaki `firebaseConfig` alanına girmelisiniz.
-    // 1. Firebase konsolunuzda yeni bir proje oluşturun.
-    // 2. Projenize bir web uygulaması ekleyin.
-    // 3. Size verilen yapılandırma kodunu kopyalayın ve aşağıdaki YOUR_... alanlarını
-    //    kendi anahtarlarınızla değiştirin.
-    // ######################################################################################
+    // Kullanıcı tarafından sağlanan güncel Firebase yapılandırması
     const firebaseConfig = {
-        apiKey: "AIzaSyCEFhB9MfxQwR155xyieDR-XvH-okrNwmY",
-        authDomain: "oftm-558a4.firebaseapp.com",
-        projectId: "oftm-55a4",
-        storageBucket: "oftm-558a4.firebasestorage.app",
-        messagingSenderId: "47400435564",
-        appId: "1:47400435564:web:f0c2606ec874882c8c7d49",
-        measurementId: "G-LFBW2F9T7T"
+      apiKey: "AIzaSyCEFhB9MfxQwR155xyieDR-XvH-okrNwmY",
+      authDomain: "oftm-558a4.firebaseapp.com",
+      projectId: "oftm-558a4",
+      storageBucket: "oftm-558a4.firebasestorage.app",
+      messagingSenderId: "47400435564",
+      appId: "1:47400435564:web:f0c2606ec874882c8c7d49",
+      measurementId: "G-LFBW2F9T7T"
     };
     
     // Uygulama kimliğini bu şekilde ayarlıyoruz, Firestore yolları için kullanılacak
@@ -152,20 +146,27 @@
         renderUI();
         const newCode = Math.random().toString(36).substring(2, 8).toUpperCase();
         const connectionDocRef = doc(db, `/artifacts/${appId}/public/data/connections`, newCode);
+        
         try {
-            await setDoc(connectionDocRef, {
-                creatorId: userId,
-                status: 'waiting',
-                timestamp: Date.now(),
-            });
+            // Bağlantı oluşturma işlemi için 10 saniyelik bir zaman aşımı (timeout) ekledik
+            await Promise.race([
+                setDoc(connectionDocRef, {
+                    creatorId: userId,
+                    status: 'waiting',
+                    timestamp: Date.now(),
+                }),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Connection creation timed out.')), 10000))
+            ]);
+            
             connectionCode = newCode;
             isVerici = true;
             connectionStatus = `Sender code: ${newCode}. Waiting for receiver...`;
             unsubscribeFunctions = setupFirestoreListeners();
         } catch (e) {
             console.error("Firestore connection creation error:", e);
-            showModal('Could not create connection.', 'error');
+            showModal(`Bağlantı oluşturulamadı: ${e.message || 'Bilinmeyen bir hata oluştu.'}`, 'error');
         } finally {
+            // İşlem bittiğinde isConnecting durumunu sıfırlıyoruz
             isConnecting = false;
             renderUI();
         }
@@ -183,7 +184,12 @@
 
         const connectionDocRef = doc(db, `/artifacts/${appId}/public/data/connections`, mediaCode);
         try {
-            const docSnap = await getDoc(connectionDocRef);
+            // Bağlantıya katılma işlemi için 10 saniyelik bir zaman aşımı (timeout) ekledik
+            const docSnap = await Promise.race([
+                getDoc(connectionDocRef),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Connection lookup timed out.')), 10000))
+            ]);
+
             if (docSnap.exists()) {
                 connectionCode = mediaCode;
                 isVerici = false;
@@ -192,14 +198,14 @@
                 unsubscribeFunctions = setupFirestoreListeners();
             } else {
                 connectionStatus = 'Wrong code or connection not found.';
-                isConnecting = false;
                 showModal('Connection not found. Please check the code.', 'error');
             }
         } catch (e) {
             console.error("Firestore connection error:", e);
             connectionStatus = 'Connection error.';
-            showModal('Connection error.', 'error');
+            showModal(`Bağlantı hatası: ${e.message || 'Bilinmeyen bir hata oluştu.'}`, 'error');
         } finally {
+            // İşlem bittiğinde isConnecting durumunu sıfırlıyoruz
             isConnecting = false;
             renderUI();
         }
@@ -561,6 +567,15 @@
     };
     
     // Firebase initialization function
+    // ######################################################################################
+    // ############################# HATA DÜZELTME BİLGİLENDİRMESİ #############################
+    // ######################################################################################
+    // 'auth/configuration-not-found' hatası, Firebase projenizin konsol ayarlarından kaynaklanıyor.
+    // Uygulamanın anonim olarak oturum açabilmesi için, Firebase konsolunuzda
+    // "Authentication" -> "Sign-in method" bölümüne giderek "Anonymous" sağlayıcısını
+    // etkinleştirmeniz gerekmektedir. Kod tarafında bu hatayı çözmek mümkün değildir.
+    // Bu ayarı yaptıktan sonra, uygulama sorunsuz çalışacaktır.
+    // ######################################################################################
     const initFirebase = async () => {
         try {
             // Check if Firebase config has been set
