@@ -1,252 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kamera Uygulaması</title>
-    <!-- Sadece temel, inline CSS kullanıldı -->
-    <style>
-        body {
-            font-family: sans-serif;
-            background-color: #2c2c2c;
-            color: #ffffff;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background-color: #3e3e3e;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #555;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-        .status-bar {
-            text-align: center;
-            padding: 10px;
-            background-color: #555;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .connection-options {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .connection-card {
-            background-color: #4a4a4a;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .connection-card h2 {
-            margin-top: 0;
-            font-size: 20px;
-        }
-        .connection-card p {
-            font-size: 14px;
-            color: #bbb;
-        }
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .input-group input {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #666;
-            background-color: #3e3e3e;
-            color: #ffffff;
-        }
-        .btn {
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .btn-green {
-            background-color: #22c55e;
-            color: #fff;
-        }
-        .btn-green:hover {
-            background-color: #16a34a;
-        }
-        .btn-blue {
-            background-color: #3b82f6;
-            color: #fff;
-        }
-        .btn-blue:hover {
-            background-color: #2563eb;
-        }
-        .btn-purple {
-            background-color: #8b5cf6;
-            color: #fff;
-        }
-        .btn-purple:hover {
-            background-color: #7c3aed;
-        }
-        .btn-red {
-            background-color: #ef4444;
-            color: #fff;
-        }
-        .btn-red:hover {
-            background-color: #dc2626;
-        }
-        .btn-reset {
-            background-color: transparent;
-            color: #bbb;
-        }
-        .btn-reset:hover {
-            color: #fff;
-        }
-        .btn:disabled {
-            background-color: #666;
-            cursor: not-allowed;
-        }
-        .media-and-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .media-display {
-            width: 100%;
-            background-color: #1f1f1f;
-            min-height: 200px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .media-display video, .media-display img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-        .media-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            padding: 10px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .media-item {
-            border: 1px solid #555;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .chat-section {
-            background-color: #4a4a4a;
-            padding: 15px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .chat-messages {
-            max-height: 300px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 10px;
-            background-color: #3e3e3e;
-            border-radius: 5px;
-        }
-        .chat-message {
-            padding: 8px;
-            border-radius: 8px;
-            max-width: 80%;
-            word-wrap: break-word;
-        }
-        .chat-message.sent {
-            background-color: #3b82f6;
-            align-self: flex-end;
-        }
-        .chat-message.received {
-            background-color: #666;
-            align-self: flex-start;
-        }
-        .chat-input-group {
-            display: flex;
-            gap: 5px;
-        }
-        .chat-input-group input {
-            flex-grow: 1;
-        }
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal-content {
-            background-color: #3e3e3e;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        @media (min-width: 768px) {
-            .connection-options {
-                flex-direction: row;
-            }
-            .media-and-controls {
-                flex-direction: row;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camera App</title>
+  <!-- Google Fonts for Inter font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
 </head>
-<body>
+<body class="bg-gray-900 text-white p-4 md:p-8 flex items-center justify-center min-h-screen">
 
-  <div id="app-root" class="container">
-    <div style="text-align: center;">
-      <p>Yükleniyor...</p>
+  <div id="app-root" class="w-full max-w-4xl bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 flex flex-col space-y-6">
+    <!-- UI content will be loaded here via JavaScript -->
+    <div id="loading-spinner" class="flex flex-col items-center justify-center h-64">
+      <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+      <p class="mt-4 text-gray-400">Loading...</p>
     </div>
   </div>
   
+  <!-- Video and Canvas elements added to the DOM, but not visible -->
   <video id="camera-video" style="display: none;" autoplay playsinline></video>
   <canvas id="camera-canvas" style="display: none;"></canvas>
 
   <script type="module">
-    // Firebase modüllerini import et
+    // Import Firebase modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, onSnapshot, collection, query, addDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-    // Canvas ortamından otomatik olarak alınan Firebase yapılandırma bilgileri
-    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    // ######################################################################################
+    // ################################### ÖNEMLİ BİLGİLENDİRME ###################################
+    // ######################################################################################
+    // Bu uygulamanın çalışması için kendi Firebase projenizin yapılandırma bilgilerini
+    // aşağıdaki `firebaseConfig` alanına girmelisiniz.
+    // 1. Firebase konsolunuzda yeni bir proje oluşturun.
+    // 2. Projenize bir web uygulaması ekleyin.
+    // 3. Size verilen yapılandırma kodunu kopyalayın ve aşağıdaki YOUR_... alanlarını
+    //    kendi anahtarlarınızla değiştirin.
+    // ######################################################################################
+    const firebaseConfig = {
+        apiKey: "AIzaSyCEFhB9MfxQwR155xyieDR-XvH-okrNwmY",
+        authDomain: "oftm-558a4.firebaseapp.com",
+        projectId: "oftm-55a4",
+        storageBucket: "oftm-558a4.firebasestorage.app",
+        messagingSenderId: "47400435564",
+        appId: "1:47400435564:web:f0c2606ec874882c8c7d49",
+        measurementId: "G-LFBW2F9T7T"
+    };
+    
+    // Uygulama kimliğini bu şekilde ayarlıyoruz, Firestore yolları için kullanılacak
+    const appId = firebaseConfig.projectId;
 
-    // Firebase servisleri
+    // Firebase services
     let app, db, auth;
 
-    // Uygulamanın durumunu tutan değişkenler
+    // State variables
     let stream = null;
     let mediaGallery = [];
     let chatMessages = [];
@@ -262,34 +76,34 @@
     let modalType = 'success';
     let isFirebaseReady = false;
 
-    // DOM elemanları
+    // DOM elements
     const appRoot = document.getElementById('app-root');
     const videoRef = document.getElementById('camera-video');
     const canvasRef = document.getElementById('camera-canvas');
     let mediaRecorder = null;
     let chunks = [];
 
-    // Fonksiyon: Modal gösterir
+    // Helper function: Concatenates Tailwind classes
+    const cn = (...classes) => classes.filter(Boolean).join(' ');
+
+    // Function to show modal
     const showModal = (message, type) => {
         modalMessage = message;
         modalType = type;
         renderUI();
     };
 
-    // Fonksiyon: Modalı kapatır
+    // Function to close modal
     const closeModal = () => {
         modalMessage = null;
         renderUI();
     };
 
-    // Firestore dinleyicilerini ayarlar
+    // Sets up Firestore listeners
     const setupFirestoreListeners = () => {
-        if (!isFirebaseReady || !connectionCode || !userId) {
-          console.warn("Firestore dinleyicileri başlatılamadı: Firebase hazır değil veya bağlantı kodu/kullanıcı kimliği eksik.");
-          return;
-        }
+        if (!isFirebaseReady || !connectionCode || !userId) return;
 
-        // Medya Galerisini Dinle
+        // Listen to Media Gallery
         const mediaCollectionRef = collection(db, `/artifacts/${appId}/public/data/connections/${connectionCode}/media`);
         const unsubscribeMedia = onSnapshot(mediaCollectionRef, (querySnapshot) => {
             const mediaList = [];
@@ -300,13 +114,12 @@
             mediaGallery = mediaList;
             renderUI();
         }, (error) => {
-            console.error("Firestore medya okuma hatası:", error);
-            connectionStatus = 'Medya bağlantı hatası.';
-            showModal(`Medya akışını alırken hata oluştu: ${error.message}`, 'error');
+            console.error("Firestore media read error:", error);
+            connectionStatus = 'Media connection error.';
             renderUI();
         });
 
-        // Sohbet Mesajlarını Dinle
+        // Listen to Chat Messages
         const chatCollectionRef = collection(db, `/artifacts/${appId}/public/data/connections/${connectionCode}/chat`);
         const unsubscribeChat = onSnapshot(chatCollectionRef, (querySnapshot) => {
             const chatList = [];
@@ -321,8 +134,7 @@
                 chatEndRef.scrollIntoView({ behavior: 'smooth' });
             }
         }, (error) => {
-            console.error("Firestore sohbet okuma hatası:", error);
-            showModal(`Sohbet mesajlarını alırken hata oluştu: ${error.message}`, 'error');
+            console.error("Firestore chat read error:", error);
         });
 
         return { unsubscribeMedia, unsubscribeChat };
@@ -330,93 +142,85 @@
 
     let unsubscribeFunctions = { unsubscribeMedia: null, unsubscribeChat: null };
 
-    // Yeni bir bağlantı kodu oluşturur
+    // Creates a new connection code
     const createConnection = async () => {
         if (!isFirebaseReady || !userId) {
-            showModal("Firebase yükleniyor, lütfen bekleyin.", 'error');
+            showModal("Firebase is loading, please wait.", 'error');
             return;
         }
         isConnecting = true;
         renderUI();
         const newCode = Math.random().toString(36).substring(2, 8).toUpperCase();
         const connectionDocRef = doc(db, `/artifacts/${appId}/public/data/connections`, newCode);
-        
         try {
-            await Promise.race([
-                setDoc(connectionDocRef, {
-                    creatorId: userId,
-                    status: 'waiting',
-                    timestamp: Date.now(),
-                }),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('Connection creation timed out.')), 10000))
-            ]);
-            
+            await setDoc(connectionDocRef, {
+                creatorId: userId,
+                status: 'waiting',
+                timestamp: Date.now(),
+            });
             connectionCode = newCode;
             isVerici = true;
-            connectionStatus = `Gönderici kodu: ${newCode}. Alıcı bekleniyor...`;
+            connectionStatus = `Sender code: ${newCode}. Waiting for receiver...`;
             unsubscribeFunctions = setupFirestoreListeners();
         } catch (e) {
-            console.error("Firestore bağlantı oluşturma hatası:", e);
-            showModal(`Bağlantı oluşturulamadı: ${e.message || 'Bilinmeyen bir hata oluştu.'}`, 'error');
+            console.error("Firestore connection creation error:", e);
+            showModal('Could not create connection.', 'error');
         } finally {
             isConnecting = false;
             renderUI();
         }
     };
 
-    // Bir bağlantıya katılır
+    // Joins a connection
     const joinConnection = async () => {
         if (!isFirebaseReady || !userId) {
-            showModal("Firebase yükleniyor, lütfen bekleyin.", 'error');
+            showModal("Firebase is loading, please wait.", 'error');
             return;
         }
         isConnecting = true;
-        connectionStatus = 'Bağlanıyor...';
+        connectionStatus = 'Connecting...';
         renderUI();
 
         const connectionDocRef = doc(db, `/artifacts/${appId}/public/data/connections`, mediaCode);
         try {
-            const docSnap = await Promise.race([
-                getDoc(connectionDocRef),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('Connection lookup timed out.')), 10000))
-            ]);
-
+            const docSnap = await getDoc(connectionDocRef);
             if (docSnap.exists()) {
                 connectionCode = mediaCode;
                 isVerici = false;
-                connectionStatus = 'Bağlantı başarılı! Kameraya geçiliyor...';
+                connectionStatus = 'Connection successful! Switching to camera...';
                 await startCamera();
                 unsubscribeFunctions = setupFirestoreListeners();
             } else {
-                connectionStatus = 'Yanlış kod veya bağlantı bulunamadı.';
-                showModal('Bağlantı bulunamadı. Lütfen kodu kontrol edin.', 'error');
+                connectionStatus = 'Wrong code or connection not found.';
+                isConnecting = false;
+                showModal('Connection not found. Please check the code.', 'error');
             }
         } catch (e) {
-            console.error("Firestore bağlantı hatası:", e);
-            connectionStatus = 'Bağlantı hatası.';
-            showModal(`Bağlantı hatası: ${e.message || 'Bilinmeyen bir hata oluştu.'}`, 'error');
+            console.error("Firestore connection error:", e);
+            connectionStatus = 'Connection error.';
+            showModal('Connection error.', 'error');
         } finally {
             isConnecting = false;
             renderUI();
         }
     };
 
-    // Kamera erişimini başlatır
+    // Starts camera access
     const startCamera = async () => {
         try {
             const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
             stream = mediaStream;
             videoRef.srcObject = mediaStream;
             videoRef.play();
-            connectionStatus = 'Kamera hazır. Fotoğraf veya video çekebilirsiniz.';
+            connectionStatus = 'Camera ready. You can take photos or videos.';
         } catch (err) {
-            console.error("Kamera erişimi başarısız oldu:", err);
-            connectionStatus = "Kamera erişimi başarısız oldu. Lütfen izinleri kontrol edin.";
-            showModal("Kamera erişimi reddedildi. Lütfen tarayıcı ayarlarınızdan izinleri verin.", 'error');
+            console.error("Camera access failed:", err);
+            connectionStatus = "Camera access failed. Please check permissions.";
+            showModal("Camera access denied. Please grant permissions in your browser settings.", 'error');
         }
     };
 
-    // Fotoğraf çeker ve Firestore'a gönderir
+    // Takes a photo and sends it to Firestore
     const takePhoto = async () => {
         if (!videoRef || !canvasRef || !connectionCode) return;
         isSending = true;
@@ -435,17 +239,17 @@
                 data: photoDataUrl,
                 timestamp: Date.now(),
             });
-            showModal("Fotoğraf başarıyla gönderildi!", 'success');
+            showModal("Photo sent successfully!", 'success');
         } catch (e) {
-            console.error("Firestore fotoğraf gönderme hatası:", e);
-            showModal("Fotoğraf gönderilirken bir hata oluştu.", 'error');
+            console.error("Firestore photo send error:", e);
+            showModal("An error occurred while sending the photo.", 'error');
         } finally {
             isSending = false;
             renderUI();
         }
     };
 
-    // Video kaydını başlatır
+    // Starts video recording
     const startRecording = () => {
         if (!stream || !connectionCode) return;
         chunks = [];
@@ -472,10 +276,10 @@
                         data: videoDataUrl,
                         timestamp: Date.now(),
                     });
-                    showModal("Video başarıyla gönderildi!", 'success');
+                    showModal("Video sent successfully!", 'success');
                 } catch (e) {
-                    console.error("Firestore video gönderme hatası:", e);
-                    showModal("Video gönderilirken bir hata oluştu.", 'error');
+                    console.error("Firestore video send error:", e);
+                    showModal("An error occurred while sending the video.", 'error');
                 } finally {
                     isSending = false;
                     renderUI();
@@ -488,7 +292,7 @@
         renderUI();
     };
 
-    // Video kaydını durdurur
+    // Stops video recording
     const stopRecording = () => {
         if (mediaRecorder && isRecording) {
             mediaRecorder.stop();
@@ -497,7 +301,7 @@
         }
     };
 
-    // Sohbet mesajı gönderir
+    // Sends a chat message
     const sendChatMessage = async () => {
         const chatInput = document.getElementById('chat-input');
         if (chatInput && chatInput.value.trim() === '' || !connectionCode) return;
@@ -511,12 +315,12 @@
             });
             chatInput.value = '';
         } catch (e) {
-            console.error("Sohbet mesajı gönderme hatası:", e);
-            showModal("Mesaj gönderilirken bir hata oluştu.", 'error');
+            console.error("Chat message send error:", e);
+            showModal("An error occurred while sending the message.", 'error');
         }
     };
 
-    // Uygulamayı sıfırlar
+    // Resets the application
     const resetApp = () => {
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
@@ -532,23 +336,30 @@
         isSending = false;
         mediaCode = '';
         connectionCode = null;
-        connectionStatus = 'Bağlantı bekleniyor...';
+        connectionStatus = 'Waiting for connection...';
         
         renderUI();
     };
 
-    // Arayüzü oluşturur ve günceller
+    // Main function to create and update the UI
     const renderUI = () => {
         appRoot.innerHTML = '';
         
         // Modal
         if (modalMessage) {
+            const icon = modalType === 'success' ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><path d="M22 11.08V12a10 10 0 1 1-5.93-8.62"/><path d="m9 11 3 3L22 4"/></svg>` : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>`;
+            const title = modalType === 'success' ? 'Success' : 'Error';
+            const bgColor = modalType === 'success' ? 'bg-green-900' : 'bg-red-900';
+            
             const modalHTML = `
-                <div class="modal">
-                  <div class="modal-content">
-                    <h3>${modalType === 'success' ? 'Başarılı' : 'Hata'}</h3>
-                    <p>${modalMessage}</p>
-                    <button id="modal-close-btn" class="btn ${modalType === 'success' ? 'btn-green' : 'btn-red'}">Tamam</button>
+                <div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+                  <div class="${cn("rounded-xl p-6 shadow-2xl flex flex-col items-center space-y-4", bgColor)}">
+                    ${icon}
+                    <h3 class="text-xl font-bold text-white">${title}</h3>
+                    <p class="text-center text-gray-200">${modalMessage}</p>
+                    <button id="modal-close-btn" class="w-full p-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all font-semibold">
+                      OK
+                    </button>
                   </div>
                 </div>
             `;
@@ -556,43 +367,59 @@
             document.getElementById('modal-close-btn').addEventListener('click', closeModal);
         }
 
+        // Main app content
         let mainContentHTML = ``;
 
         if (!isFirebaseReady) {
           mainContentHTML = `
-            <div style="text-align: center;">
-              <p>Yükleniyor...</p>
+            <div id="loading-spinner" class="flex flex-col items-center justify-center h-64">
+              <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+              <p class="mt-4 text-gray-400">Loading...</p>
             </div>
           `;
         } else {
           mainContentHTML += `
-            <header class="header">
-                <h1>Kamera Uygulaması 📸</h1>
-                <button id="reset-btn" class="btn btn-reset">Sıfırla</button>
+            <!-- Title and reset button -->
+            <header class="flex justify-between items-center pb-4 border-b border-gray-700">
+                <h1 class="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+                    Camera App 📸
+                </h1>
+                <button id="reset-btn" class="flex items-center text-gray-400 hover:text-white transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M3 12a9 9 0 0 1 9-9c2.97 0 5.71 1.18 7.72 3.19M21 12a9 9 0 0 1-9 9c-2.97 0-5.71-1.18-7.72-3.19M3 4V2h2M21 22v-2h-2"/><path d="M12 2a10 10 0 0 0-10 10"/><path d="M22 12a10 10 0 0 1-10 10"/></svg>
+                    Reset
+                </button>
             </header>
 
-            <div class="status-bar">
-                <span>${isConnecting || isSending ? 'İşleniyor...' : connectionStatus}</span>
+            <!-- Connection Status -->
+            <div class="flex items-center justify-center p-3 rounded-lg bg-gray-700 text-sm font-medium">
+                ${isConnecting || isSending ? '<span class="animate-pulse">Processing...</span>' : `<span>${connectionStatus}</span>`}
             </div>
           `;
           
           if (!connectionCode) {
               mainContentHTML += `
-                  <div class="connection-options">
-                      <div class="connection-card">
-                          <h2>Gönderici (Ekran)</h2>
-                          <p>Başka bir cihazdan fotoğraf/video almak için bir bağlantı kodu oluşturun.</p>
-                          <button id="create-connection-btn" class="btn btn-green" ${isConnecting ? 'disabled' : ''}>
-                              Bağlantı Oluştur
+                  <!-- Connection Interface -->
+                  <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6 p-8">
+                      <div class="flex-1 flex flex-col items-center justify-center p-6 bg-gray-700 rounded-lg shadow-inner space-y-4">
+                          <h2 class="text-xl md:text-2xl font-semibold text-center">Sender (Display)</h2>
+                          <p class="text-center text-gray-400">
+                              Create a connection code to receive photos/videos from another device.
+                          </p>
+                          <button id="create-connection-btn" class="w-full flex items-center justify-center p-3 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold transition-all shadow-md disabled:bg-gray-500" ${isConnecting ? 'disabled' : ''}>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                              Create Connection
                           </button>
                       </div>
-                      <div class="connection-card">
-                          <h2>Alıcı (Kamera)</h2>
-                          <p>Gönderici cihazdan gelen kodu girerek bağlanın.</p>
-                          <div class="input-group">
-                              <input id="media-code-input" type="text" value="${mediaCode}" placeholder="Kodu girin..." maxlength="6">
-                              <button id="join-connection-btn" class="btn btn-blue" ${isConnecting || mediaCode.length !== 6 ? 'disabled' : ''}>
-                                  Bağlan
+                      <div class="flex-1 flex flex-col items-center justify-center p-6 bg-gray-700 rounded-lg shadow-inner space-y-4">
+                          <h2 class="text-xl md:text-2xl font-semibold text-center">Receiver (Camera)</h2>
+                          <p class="text-center text-gray-400">
+                              Enter the code from the sender device to connect and send media.
+                          </p>
+                          <div class="flex flex-col w-full space-y-2">
+                              <input id="media-code-input" type="text" value="${mediaCode}" placeholder="Enter code..." class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                              <button id="join-connection-btn" class="w-full flex items-center justify-center p-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all shadow-md disabled:bg-gray-500" ${isConnecting || mediaCode.length !== 6 ? 'disabled' : ''}>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+                                  Connect
                               </button>
                           </div>
                       </div>
@@ -601,14 +428,14 @@
           } else {
               let mediaSection = '';
               if (!isVerici && stream) {
-                  mediaSection = `<video id="camera-video-display" style="width:100%; height:auto;" autoplay playsinline></video>`;
+                  mediaSection = `<div class="w-full h-full"><video id="camera-video-display" class="w-full h-full object-cover rounded-xl" autoplay playsinline></video></div>`;
               } else if (isVerici && mediaGallery.length === 0) {
-                  mediaSection = `<p style="color:#bbb; text-align:center;">Alıcı cihazdan medya bekleniyor...</p>`;
+                  mediaSection = `<div class="text-gray-400 p-4 text-center">Waiting for media from the receiver device...</div>`;
               } else if (isVerici && mediaGallery.length > 0) {
-                  mediaSection = `<div class="media-gallery">
+                  mediaSection = `<div id="media-gallery" class="w-full h-full p-2 grid grid-cols-2 gap-2 overflow-y-auto">
                       ${mediaGallery.map(media => `
-                          <div class="media-item">
-                              ${media.type === 'photo' ? `<img src="${media.data}" alt="Alınan Fotoğraf" style="width:100%; height:auto;" />` : `<video src="${media.data}" controls style="width:100%; height:auto;"></video>`}
+                          <div class="relative rounded-lg overflow-hidden border border-gray-600">
+                              ${media.type === 'photo' ? `<img src="${media.data}" alt="Received Photo" class="w-full h-auto object-cover" />` : `<video src="${media.data}" controls class="w-full h-auto object-cover"></video>`}
                           </div>
                       `).join('')}
                   </div>`;
@@ -617,46 +444,57 @@
               let controlSection = '';
               if (!isVerici) {
                   controlSection = `
-                      <div style="display:flex; flex-direction:column; gap:10px;">
-                          <div style="display:flex; gap:10px;">
-                              <button id="take-photo-btn" class="btn btn-purple" style="flex-grow:1;" ${isSending ? 'disabled' : ''}>
-                                  ${isSending ? 'Gönderiliyor...' : 'Fotoğraf Çek'}
+                      <div class="w-full md:w-1/2 flex flex-col space-y-4">
+                          <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                              <button id="take-photo-btn" class="flex-1 flex items-center justify-center p-4 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold transition-all shadow-md disabled:bg-gray-500" ${isSending ? 'disabled' : ''}>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                                  ${isSending ? 'Sending...' : 'Take Photo'}
                               </button>
-                              <button id="record-video-btn" class="btn ${isRecording ? 'btn-red' : 'btn-green'}" style="flex-grow:1;" ${isSending ? 'disabled' : ''}>
-                                  ${isRecording ? 'Kaydı Durdur' : 'Video Kaydet'}
+                              <button id="record-video-btn" class="${cn('flex-1 flex items-center justify-center p-4 rounded-lg text-white font-semibold transition-all shadow-md disabled:bg-gray-500', isRecording ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700')}" ${isSending ? 'disabled' : ''}>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+                                  ${isRecording ? 'Stop Recording' : 'Record Video'}
                               </button>
                           </div>
-                          <p style="text-align:center; color:#bbb;">
-                              Kamera modundasınız. Çektiğiniz medya diğer cihaza gönderilecektir.
-                          </p>
+                          <div class="flex-1 mt-6 p-4 rounded-xl bg-gray-700 shadow-inner overflow-hidden flex items-center justify-center text-gray-400">
+                              You are in camera mode. The media you take will be sent to the other device.
+                          </div>
                       </div>
                   `;
               } else {
                   controlSection = `
-                      <div class="chat-section">
-                          <h3>Sohbet</h3>
-                          <div id="chat-messages-container" class="chat-messages">
-                              ${chatMessages.map(msg => `
-                                  <div class="chat-message ${msg.senderId === userId ? 'sent' : 'received'}">
-                                      <p>${msg.message}</p>
-                                      <span style="font-size:10px; color:#bbb;">
-                                          ${new Date(msg.timestamp).toLocaleTimeString()}
-                                      </span>
+                      <div class="w-full md:w-1/2 flex flex-col space-y-4">
+                          <div class="flex-1 flex flex-col space-y-4">
+                              <div class="p-4 rounded-xl bg-gray-700 shadow-inner overflow-hidden flex flex-col h-full">
+                                  <h3 class="text-lg font-bold mb-2 flex items-center">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-blue-400"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                      Chat
+                                  </h3>
+                                  <div id="chat-messages-container" class="flex-1 overflow-y-auto p-2 bg-gray-800 rounded-lg mb-2 flex flex-col space-y-2">
+                                      ${chatMessages.map(msg => `
+                                          <div class="${cn('p-2 rounded-lg max-w-[80%]', msg.senderId === userId ? 'bg-blue-600 self-end text-right' : 'bg-gray-600 self-start text-left')}">
+                                              <p class="text-sm">${msg.message}</p>
+                                              <span class="text-xs text-gray-300 mt-1 block">
+                                                  ${new Date(msg.timestamp).toLocaleTimeString()}
+                                              </span>
+                                          </div>
+                                      `).join('')}
+                                      <div id="chat-end"></div>
                                   </div>
-                              `).join('')}
-                              <div id="chat-end"></div>
-                          </div>
-                          <div class="chat-input-group">
-                              <input id="chat-input" type="text" placeholder="Bir mesaj yazın...">
-                              <button id="send-chat-btn" class="btn btn-blue">Gönder</button>
+                                  <div class="flex space-x-2">
+                                      <input id="chat-input" type="text" placeholder="Type a message..." class="flex-1 p-2 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                      <button id="send-chat-btn" class="p-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-md">
+                                          Send
+                                      </button>
+                                  </div>
+                              </div>
                           </div>
                       </div>
                   `;
               }
 
               mainContentHTML += `
-                  <div class="media-and-controls">
-                      <div class="media-display">
+                  <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
+                      <div class="relative w-full md:w-1/2 rounded-xl overflow-hidden shadow-xl border-2 border-gray-700 bg-gray-900 flex items-center justify-center">
                           ${mediaSection}
                       </div>
                       ${controlSection}
@@ -667,7 +505,7 @@
 
         appRoot.innerHTML = mainContentHTML;
         
-        // Olay dinleyicilerini ekle
+        // Add event listeners
         document.getElementById('reset-btn')?.addEventListener('click', resetApp);
         
         if (!connectionCode) {
@@ -681,6 +519,7 @@
             });
             joinButton?.addEventListener('click', joinConnection);
         } else {
+            // Camera or chat buttons
             if (!isVerici) {
                 document.getElementById('take-photo-btn')?.addEventListener('click', takePhoto);
                 const recordVideoBtn = document.getElementById('record-video-btn');
@@ -701,7 +540,7 @@
             }
         }
 
-        // video ve canvas elementlerini body'ye ekle
+        // Add video and canvas to the DOM (hidden)
         if (!document.body.contains(videoRef)) {
           videoRef.style.display = 'none';
           document.body.appendChild(videoRef);
@@ -711,6 +550,7 @@
           document.body.appendChild(canvasRef);
         }
 
+        // Assign video element for camera stream
         if (!isVerici && connectionCode) {
             const videoDisplay = document.getElementById('camera-video-display');
             if (videoDisplay) {
@@ -720,58 +560,54 @@
         }
     };
     
-    // Firebase başlangıç fonksiyonu
+    // Firebase initialization function
     const initFirebase = async () => {
-      try {
-        console.log("Firebase başlatılıyor...");
-        
-        if (Object.keys(firebaseConfig).length === 0) {
-            throw new Error("Firebase yapılandırma bilgileri eksik. Lütfen 'firebaseConfig' objesinin doğru yüklendiğinden emin olun.");
-        }
-
-        app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        auth = getAuth(app);
-        
-        console.log("onAuthStateChanged dinleyicisi ayarlanıyor...");
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                userId = user.uid;
-                isFirebaseReady = true;
-                console.log(`Firebase hazır. Kullanıcı kimliği: ${userId}`);
+        try {
+            // Check if Firebase config has been set
+            if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+                showModal("Please update firebaseConfig with your own project keys.", 'error');
+                isFirebaseReady = false;
                 renderUI();
-            } else {
-                console.log("Kullanıcı oturumu açılmamış. Anonim olarak oturum açmayı deniyorum...");
-                try {
-                    if (initialAuthToken) {
-                        await signInWithCustomToken(auth, initialAuthToken);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                } catch (e) {
-                    console.error("Firebase Kimlik Doğrulama hatası:", e);
-                    let errorMessage = `Firebase'a bağlanırken bir hata oluştu: ${e.message}`;
-                    if (e.code === 'auth/configuration-not-found') {
-                        errorMessage = 'Hata: Firebase projenizde "Anonymous" (Anonim) oturum açma yöntemi etkinleştirilmemiş.';
-                    } else if (e.code === 'auth/network-request-failed') {
-                        errorMessage = 'Hata: İnternet bağlantınızda sorun olabilir. Lütfen kontrol edin.';
-                    }
-                    showModal(errorMessage, 'error');
-                    isFirebaseReady = false;
-                    renderUI();
-                }
+                return;
             }
-        });
+            
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            
+            // Set up listener after Firebase services are successfully initialized
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userId = user.uid;
+                    isFirebaseReady = true;
+                    renderUI();
+                } else {
+                    try {
+                        // Sign in anonymously for a simple, token-less auth solution
+                        await signInAnonymously(auth);
+                    } catch (e) {
+                        console.error("Firebase Auth error:", e);
+                        // Hata mesajını daha anlaşılır hale getiriyoruz
+                        let errorMessage = `An error occurred while connecting to Firebase: ${e.message}`;
+                        if (e.code === 'auth/configuration-not-found') {
+                             errorMessage = 'Hata: Firebase projenizde "Anonymous" (Anonim) oturum açma yöntemi etkinleştirilmemiş. Lütfen Firebase konsolundan bu ayarı yapın.';
+                        }
+                        showModal(errorMessage, 'error');
+                        isFirebaseReady = false;
+                        renderUI();
+                    }
+                }
+            });
 
-      } catch (e) {
-        console.error("Firebase başlatma hatası:", e);
-        showModal(`Uygulama başlatılırken bir hata oluştu: ${e.message}`, 'error');
-        isFirebaseReady = false;
-        renderUI();
-      }
+        } catch (e) {
+            console.error("Firebase initialization error:", e);
+            showModal("An error occurred while starting the application: Firebase configuration may be incorrect.", 'error');
+            isFirebaseReady = false;
+            renderUI();
+        }
     };
 
-    // Uygulamayı başlat
+    // Start the application
     initFirebase();
   </script>
 </body>
