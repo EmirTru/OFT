@@ -35,14 +35,11 @@
     import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
     // ######################################################################################
-    // ############################# YAPILANDIRMA BİLGİLERİ #################################
+    // ##################### YAPILANDIRMA BİLGİLERİ (Canvas ortamından otomatik alınacak) #####################
     // ######################################################################################
-    // Firebase yapılandırmasını ve kimlik doğrulama token'ını Canvas ortamından alıyoruz
-    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
     const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-    
-    // Uygulama kimliğini Firebase yapılandırmasından alıyoruz
-    const appId = firebaseConfig.projectId;
 
     // Firebase services
     let app, db, auth;
@@ -372,7 +369,7 @@
 
         if (!isFirebaseReady) {
           mainContentHTML = `
-            <div id="loading-spinner" class="flex flex-col items-center justify-center h-64">
+            <div class="flex flex-col items-center justify-center h-64">
               <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
               <p class="mt-4 text-gray-400">Yükleniyor...</p>
             </div>
@@ -564,48 +561,55 @@
     
     // Firebase başlangıç fonksiyonu
     const initFirebase = async () => {
-        try {
-            console.log("Firebase başlatılıyor...");
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-            
-            console.log("onAuthStateChanged dinleyicisi ayarlanıyor...");
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    userId = user.uid;
-                    isFirebaseReady = true;
-                    console.log(`Firebase hazır. Kullanıcı kimliği: ${userId}`);
-                    renderUI();
-                } else {
-                    console.log("Kullanıcı oturumu açılmamış. Anonim olarak oturum açmayı deniyorum...");
-                    try {
-                        if (initialAuthToken) {
-                            await signInWithCustomToken(auth, initialAuthToken);
-                        } else {
-                            await signInAnonymously(auth);
-                        }
-                    } catch (e) {
-                        console.error("Firebase Kimlik Doğrulama hatası:", e);
-                        let errorMessage = `Firebase'a bağlanırken bir hata oluştu: ${e.message}`;
-                        if (e.code === 'auth/configuration-not-found') {
-                             errorMessage = 'Hata: Firebase projenizde "Anonymous" (Anonim) oturum açma yöntemi etkinleştirilmemiş.';
-                        } else if (e.code === 'auth/network-request-failed') {
-                             errorMessage = 'Hata: İnternet bağlantınızda sorun olabilir. Lütfen kontrol edin.';
-                        }
-                        showModal(errorMessage, 'error');
-                        isFirebaseReady = false;
-                        renderUI();
-                    }
-                }
-            });
-
-        } catch (e) {
-            console.error("Firebase başlatma hatası:", e);
-            showModal(`Uygulama başlatılırken bir hata oluştu: Firebase yapılandırması yanlış olabilir. Hata: ${e.message}`, 'error');
-            isFirebaseReady = false;
-            renderUI();
+      try {
+        console.log("Firebase başlatılıyor...");
+        
+        // Firebase yapılandırma bilgilerini kontrol et
+        if (!firebaseConfig) {
+          showModal("Firebase yapılandırma bilgileri eksik. Lütfen Canvas uygulamasının doğru şekilde yüklendiğinden emin olun.", 'error');
+          return;
         }
+
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+        
+        console.log("onAuthStateChanged dinleyicisi ayarlanıyor...");
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                isFirebaseReady = true;
+                console.log(`Firebase hazır. Kullanıcı kimliği: ${userId}`);
+                renderUI();
+            } else {
+                console.log("Kullanıcı oturumu açılmamış. Anonim olarak oturum açmayı deniyorum...");
+                try {
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (e) {
+                    console.error("Firebase Kimlik Doğrulama hatası:", e);
+                    let errorMessage = `Firebase'a bağlanırken bir hata oluştu: ${e.message}`;
+                    if (e.code === 'auth/configuration-not-found') {
+                        errorMessage = 'Hata: Firebase projenizde "Anonymous" (Anonim) oturum açma yöntemi etkinleştirilmemiş.';
+                    } else if (e.code === 'auth/network-request-failed') {
+                        errorMessage = 'Hata: İnternet bağlantınızda sorun olabilir. Lütfen kontrol edin.';
+                    }
+                    showModal(errorMessage, 'error');
+                    isFirebaseReady = false;
+                    renderUI();
+                }
+            }
+        });
+
+      } catch (e) {
+        console.error("Firebase başlatma hatası:", e);
+        showModal(`Uygulama başlatılırken bir hata oluştu: ${e.message}`, 'error');
+        isFirebaseReady = false;
+        renderUI();
+      }
     };
 
     // Uygulamayı başlat
